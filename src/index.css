@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.section-heading {
+  @apply text-2xl font-bold text-indigo-600 mb-6;
+}
+.link-hover {
+  @apply underline decoration-indigo-500/30 hover:decoration-indigo-500;
+}
