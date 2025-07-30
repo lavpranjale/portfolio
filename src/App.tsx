@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+
 const joiningYear = 2020;
 const currentYear = new Date().getFullYear();
 const experienceYears = currentYear - joiningYear;
 
-// Format experience years, e.g., "5+ Years" or "1 Year" etc.
 const experienceString = experienceYears > 1 ? `${experienceYears}+ Years` : `${experienceYears} Year`;
-// Data
+
 const portfolioData = {
   name: 'Lav Pranjale',
-   title: `Full-Stack JavaScript Engineer | MERN Stack | ${experienceString} Experience`,
-  summary: 'Experienced JavaScript Developer with 5+ years building scalable web and mobile apps using React Native, React.js, and the MERN stack (MongoDB, Express.js, React, Node.js). Skilled in full-stack development, REST API integration, clean architecture, and mobile-first design. Delivered end-to-end features in Agile teams across healthcare, fintech, and e-commerce. Seeking impactful roles as a React Native Developer, MERN Stack Developer, or Senior React.js Developer.',
+  title: `Full-Stack JavaScript Engineer | MERN Stack | ${experienceString} Experience`,
+  summary: `An accomplished JavaScript Developer with ${experienceYears}+ years of hands-on experience in architecting and deploying scalable, high-performance web and mobile applications. Proficient in modern frontend frameworks like React and React Native, and adept with backend technologies including Node.js and the MERN stack (MongoDB, Express.js, React, Node.js). My expertise spans end-to-end development, from crafting clean, modular code and integrating complex RESTful APIs to optimizing application performance and ensuring robust security. I have a proven track record of successfully managing project execution, collaborating seamlessly with cross-functional teams, and maintaining exceptional client communication to consistently deliver high-quality, on-time solutions that directly address business objectives and user needs. I thrive in dynamic environments and am passionate about leveraging technology to solve real-world problems.`,
   contact: {
     email: 'lav13feb@gmail.com',
     phone: '+919669662926',
@@ -19,85 +19,92 @@ const portfolioData = {
     github: 'https://github.com/lavpranjale'
   },
   skills: {
-    frontend: ['React Native', 'React.js', 'HTML5', 'CSS3', 'TypeScript'],
-    backend: ['Node.js', 'Express.js'],
-    databases: ['MongoDB', 'MySQL'],
-    cloudDevOps: ['Firebase', 'AWS (EC2, S3)', 'CloudFront', 'Git', 'GitHub'],
-    projectManagement: ['Agile Methodologies', 'Sprint Planning', 'Requirement Gathering', 'Client Communication'],
-    additional: ['RESTful API Integration', 'Responsive Design', 'Cross-functional Team Collaboration']
+    frontend: ['React Native', 'React.js', 'HTML5', 'CSS3', 'TypeScript', 'Redux', 'Context API', 'Responsive Design', 'Webpack', 'Babel'],
+    backend: ['Node.js', 'Express.js', 'RESTful APIs', 'Authentication (JWT)', 'Microservices (Basic)'],
+    databases: ['MongoDB', 'MySQL', 'PostgreSQL (Basic)', 'Firebase Firestore'],
+    cloudDevOps: ['AWS (EC2, S3, CloudFront)', 'Firebase', 'Git', 'GitHub', 'CI/CD (Basic Understanding)'],
+    projectManagement: ['Agile Methodologies', 'Scrum', 'Sprint Planning', 'Task Delegation', 'Requirement Gathering', 'Client Communication', 'Cross-functional Team Collaboration'],
+    otherSkills: ['Performance Optimization', 'Clean Architecture', 'API Integration', 'Mobile-First Design', 'Problem Solving', 'Debugging', 'Code Review']
   },
   experience: [
     {
-      title: 'React Developer (Freelancer)',
+      title: 'Frontend Developer (Freelancer)',
       company: 'Harbura',
       dates: '03/2025 - 05/2025',
       location: 'Remote',
       description: [
-        'Built responsive, accessible UIs using React and TypeScript for a health-focused application.',
-        'Integrated RESTful APIs powered by Python and AWS for secure health data transfer.',
-        'Enabled users to upload, manage, and view medical documents, enhancing functionality and UX.',
-        'Integrated GPT-based AI features for personalized experiences.',
-        'Delivered features on time within an Agile remote team, ensuring code quality and timely releases.'
+        'Architected and built intuitive user interfaces using React with TypeScript, delivering a health-focused application with enhanced user experience.',
+        'Seamlessly integrated complex RESTful APIs, developed in Python with AWS services, ensuring secure and efficient data flow for health documents.',
+        'Implemented robust functionalities allowing users to securely upload, manage, and view sensitive health documents, significantly improving data accessibility and control.',
+        'Leveraged advanced GPT technologies to develop intelligent, personalized user experiences, including a chatbot for real-time health record queries, boosting user engagement.',
+        'Managed end-to-end project execution, ensuring on-time delivery and adherence to high-quality standards within an agile remote development environment.'
       ],
-      techStack: ['React', 'TypeScript', 'REST APIs', 'AWS', 'Git', 'Figma']
+      techStack: ['React', 'TypeScript', 'REST APIs', 'AWS', 'Python', 'GPT APIs']
     },
     {
-      title: 'Senior JavaScript Developer | React Native & MERN',
+      title: 'MERN | React Native Developer',
       company: 'Webcubator Technologies',
       dates: '01/2020 - 03/2025',
-      location: 'Pune',
+      location: 'Pune, India',
       description: [
-        'Built and maintained scalable applications using React Native and the MERN stack, supporting 10,000+ users with 99.9% uptime.',
-        'Collaborated with clients and cross-functional teams to gather requirements and deliver custom solutions, boosting satisfaction by 20%.',
-        'Led end-to-end feature development: UI/UX, API integration, and database design.',
-        'Managed multiple client-facing projects across healthcare, fintech, and retail, meeting 100% of deadlines.',
-        'Oversaw production deployments, reducing post-release issues by 30% through CI/CD and testing.'
+        'Engineered and maintained highly scalable web and mobile applications using the MERN stack and React Native, successfully supporting over 10,000 active users with a consistent 99.9% uptime.',
+        'Collaborated extensively with clients to meticulously gather and refine requirements, translating business needs into tailored technical solutions that boosted client satisfaction by 20% and achieved a 100% on-time project delivery rate.',
+        'Spearheaded the development of critical features from conception to deployment, encompassing UI/UX design, robust API integration, and optimized database architecture.',
+        'Managed multiple production releases with stringent quality control, achieving zero critical issues post-deployment and significantly reducing application downtime by 30% through proactive monitoring and optimization.',
+        'Led and mentored junior developers, fostering a collaborative environment and ensuring adherence to best practices in coding, testing, and deployment.'
       ],
-      techStack: ['React Native', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'Firebase', 'AWS (EC2)', 'S3', 'CloudFront', 'Git', 'Agile']
+      techStack: ['MERN Stack', 'React Native', 'Node.js', 'Express.js', 'MongoDB', 'React.js', 'Firebase', 'AWS (EC2, S3, CloudFront)', 'Agile Methodologies']
     }
   ],
   projects: [
     {
       name: 'Harbura Health Application',
-      role: 'React Developer (Freelancer)',
-      description: 'Developed a secure, high-performance web app using React (TypeScript) to improve usability for patients and families. Implemented features like Smart Sorting, Effortless Uploads, and Auto-Sync for efficient health data management.',
-      techStack: ['React', 'TypeScript', 'AWS', 'GPT', 'Python', 'REST API', 'Health Tech'],
-      details: 'This project involved building a robust health application from the ground up, focusing on user-centric design and secure data handling. Key achievements included a significant reduction in data retrieval times and a measurable increase in user engagement due to the chatbot integration.'
+      role: 'Frontend Developer (Freelancer)',
+      description: 'Developed a secure, high-performance web application using React (TypeScript) for seamless health document management. Features include Smart Sorting, Effortless Uploads, and Auto-Sync with provider portals, enhancing user control over personal medical records.',
+      techStack: ['React', 'TypeScript', 'AWS', 'GPT APIs', 'Python', 'REST API'],
+      details: 'This project focused on creating a robust and intuitive health application from the ground up. I was responsible for building responsive user interfaces, integrating with Python-based RESTful APIs hosted on AWS, and implementing secure document handling. A key achievement was integrating a GPT-powered chatbot, enabling real-time health record queries and significantly improving user engagement and personalization. The application was designed with a strong emphasis on data security and user experience.'
     },
     {
-      name: 'CGMPlus & Clova Health - Glucose & Wellness Apps',
+      name: 'CGMPlus & Clova Health',
       role: 'React Native Developer at Webcubator Technologies',
-      description: 'Developed AI-powered React Native apps for glucose monitoring, weight loss, and wellness tracking, supporting 1,000+ active users. Built meal and exercise logging with 95% calorie tracking accuracy.',
-      techStack: ['React Native', 'Firebase', 'AWS', 'CGM', 'Terra', 'Vital', 'Mobile App Development', 'Calorie Tracker'],
-      details: 'These applications revolutionized personal health management by providing users with real-time insights into their glucose levels and overall wellness. The development focused on intuitive UX/UI, ensuring that complex health data was presented in an easily understandable format.'
+      description: 'Built AI-driven mobile applications for weight loss and glucose control, integrating with real-time CGM devices and serving over 1,000 users. Implemented precise meal and exercise logging with 95% calorie tracking accuracy and designed intuitive graphs to improve glucose monitoring efficiency by 40%.',
+      techStack: ['React Native', 'Firebase', 'AWS (S3)', 'Terra', 'Vital', 'SQL', 'Mobile App Development', 'Data Visualization', 'Health Tech'],
+      details: 'These critical health applications aimed to provide users with comprehensive tools for managing their health. My role involved developing the core mobile functionalities, integrating with real-time continuous glucose monitoring (CGM) devices, and implementing advanced data visualization for glucose trends. I also developed a doctor dashboard allowing real-time monitoring of over 100 users, enhancing patient care. The focus was on improving user retention by 30% through enhanced UX and promoting long-term health goal adherence.'
     },
     {
-      name: 'Rocco Finance - Personal Finance & Wage Access App',
+      name: 'Rocco Finance',
       role: 'React Native Developer at Webcubator Technologies',
-      description: 'Developed a React Native mobile app that provided personalized spending insights, reducing user debt reliance by 40%. Enabled $100 wage advances for 50,000+ users, improving financial flexibility.',
-      techStack: ['React Native', 'Firebase', 'AWS', 'Plaid', 'Payliance', 'Fintech', 'Personal Finance'],
-      details: 'Rocco Finance was designed to empower users with better financial control. The app\'s success was measured by significant reductions in user debt reliance and improved financial flexibility, directly impacting thousands of users\' daily lives.'
+      description: 'Engineered a React Native mobile application providing personalized spending insights and enabling wage advances. Successfully helped over 50,000 users access earnings before payday, reducing debt reliance by 40% and increasing retention by 25%.',
+      techStack: ['React Native', 'Node.js', 'AWS (S3)', 'SQL', 'Firebase', 'Plaid', 'Payliance', 'Zendesk', 'Fintech', 'Financial Wellness'],
+      details: 'Rocco Finance was a pivotal project in the fintech domain, designed to empower users with greater financial flexibility. I developed key features such as personalized spending analytics, interest-free wage advances, and integration with third-party financial APIs like Plaid and Payliance. The application significantly reduced overdraft and payday loan usage, demonstrably improving users\' financial well-being and lowering debt-related stress by 30%.'
     },
     {
-      name: 'EnLaCancha - Latino Community Learning Platform',
+      name: 'EnLaCancha',
       role: 'Full Stack JavaScript Developer at Webcubator Technologies',
-      description: 'Built a scalable education platform enabling 50,000+ users from the Latino community to access courses and content. Integrated Stripe for secure payments, boosting course enrollments by 20%.',
-      techStack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Stripe', 'AWS S3', 'EdTech'],
-      details: 'EnLaCancha addressed a critical need for accessible education in the Latino community. My role involved full-stack development, ensuring both a smooth user interface and a highly performant backend.'
+      description: 'Developed a scalable learning platform for the Latino community, facilitating access to courses for over 50,000 active users. Integrated Stripe for secure payment processing, which boosted course enrollments by 20%, and optimized data retrieval speeds by 40% using MongoDB.',
+      techStack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Stripe', 'AWS (S3)', 'EdTech', 'Scalable Architecture'],
+      details: 'EnLaCancha was a comprehensive educational platform requiring robust full-stack development. I was responsible for both frontend (React JS) and backend (Node.js, Express.js) development, ensuring a fast and responsive UI. Key contributions included integrating secure payment gateways with Stripe, managing real-time data storage with MongoDB, and deploying a highly available infrastructure on AWS S3, ensuring 99.9% uptime for content delivery.'
     },
     {
-      name: 'Palatable - Restaurant Management Platform',
+      name: 'Planitnerd',
+      role: 'Full Stack Developer at Webcubator Technologies',
+      description: 'Built a cross-platform trip planning and travel hacking education app (iOS/Android) using Ionic Framework and Angular 9, achieving over 1,000 downloads. Enabled real-time collaboration, improving group planning efficiency by 50%, and hosted on AWS for 99.9% uptime.',
+      techStack: ['Ionic Framework (5)', 'Angular 9', 'Node.js', 'Express.js', 'MongoDB', 'AWS (ECS, S3, CloudFront, Elastic IP)', 'Cross-Platform Development', 'Travel Tech'],
+      details: 'Planitnerd was an innovative travel application aimed at simplifying trip planning and educating users on travel hacking. My role involved full-stack development, from building the cross-platform mobile application using Ionic and Angular to designing and implementing the backend with Node.js and Express.js. I integrated real-time collaboration features that significantly enhanced group planning. The application was hosted on a highly scalable AWS infrastructure, ensuring fast delivery speeds and exceptional uptime.'
+    },
+    {
+      name: 'Palatable Restaurant',
       role: 'React Native Developer at Webcubator Technologies',
-      description: 'Developed a React Native mobile app for iOS and Android, enabling over 10,000+ restaurant owners to manage orders, deals, menus, and profiles. Reduced order processing time by 40%.',
-      techStack: ['React Native', 'Firebase', 'AWS (EC2)', 'S3', 'CloudFront', 'Cross-Platform Mobile App'],
-      details: 'Palatable streamlined restaurant operations for thousands of owners. The focus was on creating a highly efficient and user-friendly mobile experience, leading to significant reductions in order processing time and errors.'
+      description: 'Developed a cross-platform mobile application for restaurant owners (iOS/Android), currently used by over 10,000 active users to manage orders, deals, menus, and profiles. This led to a 40% reduction in order processing time and a 25% reduction in menu change errors.',
+      techStack: ['React Native', 'Firebase', 'AWS (EC2, S3, CloudFront)', 'Real-time Sync', 'Mobile App Development', 'Restaurant Management'],
+      details: 'Palatable Restaurant was designed to be a comprehensive tool for restaurant owners to streamline their operations. I was responsible for building the mobile application that provided efficient order management tools, real-time menu updates, and customer engagement features. Integration with Firebase enabled real-time data synchronization, ensuring accurate order tracking and improving overall operational efficiency for restaurant owners. The app significantly improved management workflows and customer satisfaction.'
     }
   ],
   education: [
     {
       degree: 'MCA',
       institution: 'International Institute of Professional Studies, DAVV',
-      year: '04/2019',
+      year: '2019',
       location: 'Indore, India'
     }
   ]
@@ -110,6 +117,7 @@ type Project = {
   description: string;
   techStack: string[];
   details?: string;
+  link?: string; // Optional link to the project
 };
 
 interface ProjectModalProps {
@@ -162,6 +170,13 @@ function ProjectModal({ project, onClose }: ProjectModalProps) {
             <span key={i} className="modal-tag">{tech}</span>
           ))}
         </div>
+        {project.link && (
+          <div className="modal-actions">
+            <a href={project.link} target="_blank" rel="noopener noreferrer" className="cta-button cta-filled">
+              View Project
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -186,13 +201,18 @@ const App = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '-50% 0px -50% 0px',
-      threshold: 0,
+      // The section will be active when its top is within the top 20% of the viewport,
+      // or its bottom is within the bottom 20% of the viewport.
+      // This makes it more likely for the last section to be detected.
+      rootMargin: '-20% 0px -20% 0px', // Adjusted rootMargin
+      threshold: 0, // Trigger as soon as any part of the target enters the root
     };
 
     const observer = new window.IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && entry.target.id) {
+          // This logic can be more sophisticated for overlapping sections if needed.
+          // For now, it sets the active section to the last one that intersects.
           setActiveSection(entry.target.id);
         }
       });
@@ -207,7 +227,7 @@ const App = () => {
         if (ref.current) observer.unobserve(ref.current);
       });
     };
-  }, []);
+  }, [sectionRefs]); // Added sectionRefs to dependency array
 
   interface ScrollToSectionFn {
     (id: string): void;
@@ -228,12 +248,6 @@ const App = () => {
       <nav className="nav-bar">
         <div className="nav-container">
           <button className="nav-logo-btn" onClick={() => scrollToSection('hero')}>
-            {/* <span className="nav-logo-circle">
-              <svg xmlns="http://www.w3.org/2000/svg" className="nav-logo-svg" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2">
-                <circle cx="12" cy="7" r="4" />
-                <path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7" />
-              </svg>
-            </span> */}
             <span className="nav-logo-text">{portfolioData.name.split(' ')[0]} Portfolio</span>
           </button>
           <div className="nav-links-desktop">
@@ -308,7 +322,7 @@ const App = () => {
         <section id="about" ref={sectionRefs.about} className="section section-bg-white">
           <div className="section-container">
             <h2 className="section-title">About Me</h2>
-            <div className="box">
+            <div className="box about-box">
               <p className="box-content">{portfolioData.summary}</p>
             </div>
           </div>
@@ -339,7 +353,7 @@ const App = () => {
             <h2 className="section-title">Experience</h2>
             <div className="experience-list">
               {portfolioData.experience.map((job, idx) => (
-                <div key={idx} className="box">
+                <div key={idx} className="box experience-item">
                   <h3 className="experience-jobtitle">{job.title}</h3>
                   <p className="experience-company">{job.company} - {job.location}</p>
                   <p className="experience-dates">{job.dates}</p>
