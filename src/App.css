@@ -78,8 +78,8 @@ ul {
   margin-bottom: 4rem;
   font-size: 2.8rem;
   position: relative;
-  display: inline-block; /* To center the underline effect */
-  width: 100%; /* To allow text-align to work */
+  display: inline-block;
+  width: 100%;
 }
 
 .section-title::after {
@@ -412,7 +412,7 @@ ul {
   padding: 2rem;
   box-shadow: var(--shadow-md);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%; /* Ensure cards are same height */
+  height: 100%;
 }
 
 .skills-card:hover {
@@ -529,7 +529,7 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 280px; /* Ensures consistent card height */
+  min-height: 280px;
 }
 
 .project-card:hover {
@@ -561,7 +561,7 @@ ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
-  margin-top: auto; /* Pushes tags to the bottom */
+  margin-top: auto;
 }
 
 .project-tech-label {
@@ -591,7 +591,7 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(99, 102, 241, 0.9); /* primary-color with transparency */
+  background-color: rgba(99, 102, 241, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -601,12 +601,12 @@ ul {
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 0.75rem;
-  pointer-events: none; /* Allows click through when hidden */
+  pointer-events: none;
 }
 
 .project-card:hover .project-overlay {
   opacity: 1;
-  pointer-events: auto; /* Enables click when visible */
+  pointer-events: auto;
 }
 
 /* Project Modal */
@@ -727,6 +727,63 @@ ul {
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Blogs Section */
+.blogs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.blog-card {
+  background-color: var(--background-white);
+  border-radius: 0.75rem;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+}
+
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.blog-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+  color: var(--primary-color);
+}
+
+.blog-platform {
+  font-size: 1rem;
+  color: var(--text-color-light);
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.blog-description {
+  font-size: 1rem;
+  color: var(--text-color-dark);
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.blog-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  display: inline-block;
+  margin-top: auto;
+}
+
+.blog-card:hover .blog-link {
+  text-decoration: underline;
+}
 
 /* Education Section */
 .education-list {
@@ -861,7 +918,7 @@ ul {
     font-size: 2.2rem;
     margin-bottom: 3rem;
   }
-  .box, .skills-card, .project-card, .education-item {
+  .box, .skills-card, .project-card, .education-item, .blog-card {
     padding: 2rem;
   }
   .experience-jobtitle {
@@ -877,12 +934,21 @@ ul {
   .modal-title {
     font-size: 1.75rem;
   }
+  .modal-role {
+    font-size: 1rem;
+  }
+  .modal-description {
+    font-size: 1.1rem;
+  }
   .contact-message {
     font-size: 1.1rem;
   }
   .contact-btn {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
+  }
+  .blogs-grid {
+    grid-template-columns: 1fr;
   }
 }
 

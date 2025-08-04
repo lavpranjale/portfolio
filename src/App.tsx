@@ -100,6 +100,27 @@ const portfolioData = {
       details: 'Palatable Restaurant was designed to be a comprehensive tool for restaurant owners to streamline their operations. I was responsible for building the mobile application that provided efficient order management tools, real-time menu updates, and customer engagement features. Integration with Firebase enabled real-time data synchronization, ensuring accurate order tracking and improving overall operational efficiency for restaurant owners. The app significantly improved management workflows and customer satisfaction.'
     }
   ],
+  blogs: [
+    {
+      title: 'React Native Performance Optimization: What Actually Made a Difference',
+      platform: 'Medium',
+      url: 'https://medium.com/@lav13feb/react-native-performance-optimization-what-actually-made-a-difference-af548af37a08',
+      description: `Optimizing performance isn’t about using 100 different tools. It’s about small, intentional improvements that compound over time. In this post, I’ll skip the theory and share real techniques that made a visible difference in performance across React Native apps I’ve built or maintained.`,
+    },
+    {
+      title: 'Lessons from Scaling a React Native App to 1M+ Users',
+      platform: 'Hashnode',
+      url: 'https://scaling-mobile-react-native-insights.hashnode.dev/lessons-from-scaling-a-react-native-app-to-1m-users',
+      description: `When you’re building for a few hundred users, development feels straightforward: add a feature, test it, release it, repeat. But when your app crosses 1 million users, that simplicity disappears — fast. Suddenly, every decision has scale implications, and tiny cracks in your architecture become glaring system faults.`,
+    },
+    {
+      title: 'Build a Native Module in React Native (Battery Level Example for Android & iOS)',
+      platform: 'dev.to',
+      url: 'https://dev.to/lav_pranjale_4cdd421d464d/build-a-native-module-in-react-native-battery-level-example-for-android-ios-46i4',
+      description: `In this guide, you’ll learn how to create your own native module in React Native — using Kotlin for Android and Swift for iOS — to fetch the battery level of the device.
+You'll understand how the React Native bridge works and how JavaScript can talk directly to platform-native code.`,
+    }
+  ],
   education: [
     {
       degree: 'MCA',
@@ -193,6 +214,7 @@ const App = () => {
     skills: useRef(null),
     experience: useRef(null),
     projects: useRef(null),
+    blogs: useRef(null),
     education: useRef(null),
     contact: useRef(null),
   };
@@ -201,18 +223,13 @@ const App = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      // The section will be active when its top is within the top 20% of the viewport,
-      // or its bottom is within the bottom 20% of the viewport.
-      // This makes it more likely for the last section to be detected.
-      rootMargin: '-20% 0px -20% 0px', // Adjusted rootMargin
-      threshold: 0, // Trigger as soon as any part of the target enters the root
+      rootMargin: '-20% 0px -20% 0px', 
+      threshold: 0,
     };
 
     const observer = new window.IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting && entry.target.id) {
-          // This logic can be more sophisticated for overlapping sections if needed.
-          // For now, it sets the active section to the last one that intersects.
           setActiveSection(entry.target.id);
         }
       });
@@ -227,7 +244,7 @@ const App = () => {
         if (ref.current) observer.unobserve(ref.current);
       });
     };
-  }, [sectionRefs]); // Added sectionRefs to dependency array
+  }, [sectionRefs]);
 
   interface ScrollToSectionFn {
     (id: string): void;
@@ -251,7 +268,7 @@ const App = () => {
             <span className="nav-logo-text">{portfolioData.name.split(' ')[0]} Portfolio</span>
           </button>
           <div className="nav-links-desktop">
-            {['about', 'skills', 'experience', 'projects', 'education', 'contact'].map(sectionId => (
+            {['about', 'skills', 'experience', 'projects', 'blogs', 'education', 'contact'].map(sectionId => (
               <button
                 key={sectionId}
                 onClick={() => scrollToSection(sectionId)}
@@ -275,7 +292,7 @@ const App = () => {
         </div>
         {isMenuOpen &&
           <div className="nav-links-mobile">
-            {['about', 'skills', 'experience', 'projects', 'education', 'contact'].map(sectionId => (
+            {['about', 'skills', 'experience', 'projects', 'blogs', 'education', 'contact'].map(sectionId => (
               <button
                 key={sectionId}
                 onClick={() => scrollToSection(sectionId)}
@@ -406,8 +423,24 @@ const App = () => {
             </div>
           </div>
         </section>
+        {/* Blogs */}
+        <section id="blogs" ref={sectionRefs.blogs} className="section section-bg-white">
+          <div className="section-container">
+            <h2 className="section-title">Blogs</h2>
+            <div className="blogs-grid">
+              {portfolioData.blogs.map((blog, idx) => (
+                <a key={idx} href={blog.url} target="_blank" rel="noopener noreferrer" className="blog-card">
+                  <h3 className="blog-title">{blog.title}</h3>
+                  <p className="blog-platform">Published on {blog.platform}</p>
+                  <p className="blog-description">{blog.description}</p>
+                  <div className="blog-link">Read More</div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
         {/* Education */}
-        <section id="education" ref={sectionRefs.education} className="section section-bg-white">
+        <section id="education" ref={sectionRefs.education} className="section section-bg-light">
           <div className="section-container">
             <h2 className="section-title">Education</h2>
             <div className="education-list">
