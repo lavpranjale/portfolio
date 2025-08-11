@@ -7,13 +7,15 @@ import {
 } from 'lucide-react';
 import './tailwind.css';
 
-// Matrix Rain Effect Component
-const MatrixRain = ({ isDarkMode }) => {
+// Matrix Rain Effect Component with performance optimization
+const MatrixRain = React.memo(({ isDarkMode }) => {
   const canvasRef = useRef(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d', { alpha: false });
     
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -53,11 +55,15 @@ const MatrixRain = ({ isDarkMode }) => {
     
     const interval = setInterval(draw, 35);
     
-    window.addEventListener('resize', resizeCanvas);
+    const handleResize = () => {
+      resizeCanvas();
+    };
+    
+    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
       clearInterval(interval);
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isDarkMode]);
   
@@ -65,25 +71,29 @@ const MatrixRain = ({ isDarkMode }) => {
     <canvas 
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-20"
+      aria-hidden="true"
     />
   );
-};
+});
 
-// Floating Particles Component
-const FloatingParticles = ({ isDarkMode }) => {
+// Floating Particles Component with performance optimization
+const FloatingParticles = React.memo(({ isDarkMode }) => {
   const particlesRef = useRef(null);
   
   useEffect(() => {
     const container = particlesRef.current;
+    if (!container) return;
+    
     const particles = [];
     
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 20; i++) { // Reduced for better performance
       const particle = document.createElement('div');
       particle.className = `absolute w-1 h-1 rounded-full ${isDarkMode ? 'bg-blue-400' : 'bg-purple-400'}`;
       particle.style.left = Math.random() * 100 + '%';
       particle.style.top = Math.random() * 100 + '%';
       particle.style.animationDelay = Math.random() * 20 + 's';
       particle.style.animation = `float ${15 + Math.random() * 10}s infinite linear`;
+      particle.setAttribute('aria-hidden', 'true');
       container.appendChild(particle);
       particles.push(particle);
     }
@@ -93,11 +103,11 @@ const FloatingParticles = ({ isDarkMode }) => {
     };
   }, [isDarkMode]);
   
-  return <div ref={particlesRef} className="fixed inset-0 pointer-events-none z-1" />;
-};
+  return <div ref={particlesRef} className="fixed inset-0 pointer-events-none z-1" aria-hidden="true" />;
+});
 
-// Enhanced Typewriter Effect
-const TypewriterText = ({ text, delay = 100, initialDelay = 0, className = "" }) => {
+// Enhanced Typewriter Effect with accessibility
+const TypewriterText = React.memo(({ text, delay = 100, initialDelay = 0, className = "" }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
@@ -122,22 +132,22 @@ const TypewriterText = ({ text, delay = 100, initialDelay = 0, className = "" })
   }, [index, text, delay, initialDelay]);
 
   return (
-    <span className={`font-mono ${className}`}>
+    <span className={`font-mono ${className}`} aria-label={text}>
       {displayedText}
-      <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}>|</span>
+      <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`} aria-hidden="true">|</span>
     </span>
   );
-};
+});
 
-// 3D Skill Card Component
-const SkillCard = ({ skill, index, isDarkMode }) => {
+// 3D Skill Card Component with accessibility
+const SkillCard = React.memo(({ skill, index, isDarkMode }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   return (
     <motion.div
       className={`relative p-3 sm:p-4 rounded-xl cursor-pointer overflow-hidden ${
-        isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-white/50 border-gray-200'
-      } border backdrop-blur-sm`}
+        isDarkMode ? 'bg-gray-800/70 border-gray-600' : 'bg-white/80 border-gray-300'
+      } border backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -153,27 +163,31 @@ const SkillCard = ({ skill, index, isDarkMode }) => {
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       style={{ transformStyle: 'preserve-3d' }}
+      role="listitem"
+      tabIndex={0}
+      aria-label={`Skill: ${skill}`}
     >
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
+        aria-hidden="true"
       />
       <div className="relative z-10 flex items-center space-x-2 sm:space-x-3">
-        <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-blue-400' : 'bg-purple-500'}`} />
-        <span className="font-medium text-sm sm:text-base">{skill}</span>
+        <div className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-blue-400' : 'bg-purple-500'}`} aria-hidden="true" />
+        <span className="font-medium text-sm sm:text-base text-gray-900 dark:text-gray-100">{skill}</span>
       </div>
     </motion.div>
   );
-};
+});
 
-// Enhanced Project Card Component
-const ProjectCard = ({ project, onClick, isDarkMode }) => {
+// Enhanced Project Card Component with accessibility
+const ProjectCard = React.memo(({ project, onClick, isDarkMode }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
   
-  const handleMouseMove = (e) => {
+  const handleMouseMove = useCallback((e) => {
     if (cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
       setMousePosition({
@@ -181,16 +195,21 @@ const ProjectCard = ({ project, onClick, isDarkMode }) => {
         y: e.clientY - rect.top
       });
     }
-  };
+  }, []);
+  
+  const handleKeyPress = useCallback((e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick(project);
+    }
+  }, [onClick, project]);
   
   return (
     <motion.div
       ref={cardRef}
       className={`relative p-4 sm:p-6 rounded-2xl cursor-pointer overflow-hidden group ${
-        isDarkMode ? 'bg-gray-800/80' : 'bg-white/80'
-      } backdrop-blur-sm border ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-200'
-      } h-full flex flex-col`}
+        isDarkMode ? 'bg-gray-800/90 border-gray-600' : 'bg-white/90 border-gray-300'
+      } backdrop-blur-sm border h-full flex flex-col focus:outline-none focus:ring-2 focus:ring-blue-500`}
       initial={{ opacity: 0, scale: 0.9 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -207,6 +226,10 @@ const ProjectCard = ({ project, onClick, isDarkMode }) => {
       }}
       onMouseMove={handleMouseMove}
       onClick={() => onClick(project)}
+      onKeyDown={handleKeyPress}
+      tabIndex={0}
+      role="button"
+      aria-label={`View details for ${project.name} project`}
     >
       {/* Animated background gradient */}
       <motion.div
@@ -214,41 +237,40 @@ const ProjectCard = ({ project, onClick, isDarkMode }) => {
         style={{
           background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.1), transparent 40%)`
         }}
+        aria-hidden="true"
       />
       
       {/* Glowing border effect */}
       <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
         isDarkMode ? 'bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20' : 'bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20'
-      } blur-sm`} />
+      } blur-sm`} aria-hidden="true" />
       
       <div className="relative z-10 flex-1 flex flex-col">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <h3 className={`text-lg sm:text-xl font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'} leading-tight`}>
+          <h3 className={`text-lg sm:text-xl font-bold ${isDarkMode ? 'text-blue-300' : 'text-blue-700'} leading-tight`}>
             {project.name}
           </h3>
           <motion.div
-            className={`w-3 h-3 rounded-full ${isDarkMode ? 'bg-green-400' : 'bg-green-500'} flex-shrink-0 ml-2`}
+            className={`w-3 h-3 rounded-full ${isDarkMode ? 'bg-green-400' : 'bg-green-600'} flex-shrink-0 ml-2`}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
+            aria-hidden="true"
           />
         </div>
         
-        <p className={`text-xs sm:text-sm mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p className={`text-xs sm:text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           {project.company}
         </p>
         
-        <p className={`text-xs sm:text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} line-clamp-3`}>
+        <p className={`text-xs sm:text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} line-clamp-3`}>
           {project.description.split('.')[0]}.
         </p>
         
         <div className="flex items-center justify-between mt-auto">
-          <motion.button
-            className={`text-xs sm:text-sm ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} flex items-center group`}
-            whileHover={{ x: 5 }}
-          >
+          <span className={`text-xs sm:text-sm ${isDarkMode ? 'text-blue-300 hover:text-blue-200' : 'text-blue-700 hover:text-blue-800'} flex items-center group`}>
             View Details 
-            <ArrowUpRight size={14} className="ml-1 group-hover:rotate-45 transition-transform duration-200" />
-          </motion.button>
+            <ArrowUpRight size={14} className="ml-1 group-hover:rotate-45 transition-transform duration-200" aria-hidden="true" />
+          </span>
           
           {project.link && (
             <a
@@ -256,9 +278,10 @@ const ProjectCard = ({ project, onClick, isDarkMode }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className={`text-xs ${isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-600 hover:text-gray-800'} flex items-center`}
+              className={`text-xs ${isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-700 hover:text-gray-900'} flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 rounded`}
+              aria-label={`View live demo of ${project.name}`}
             >
-              <Globe size={12} className="mr-1" />
+              <Globe size={12} className="mr-1" aria-hidden="true" />
               <span className="hidden sm:inline">Live Demo</span>
               <span className="sm:hidden">Demo</span>
             </a>
@@ -267,10 +290,38 @@ const ProjectCard = ({ project, onClick, isDarkMode }) => {
       </div>
     </motion.div>
   );
-};
+});
 
-// Enhanced Project Modal Component
-const ProjectModal = ({ project, onClose, isDarkMode }) => {
+// Enhanced Project Modal Component with accessibility
+const ProjectModal = React.memo(({ project, onClose, isDarkMode }) => {
+  useEffect(() => {
+    // Trap focus within modal
+    const focusableElements = document.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTabKey = (e) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    firstElement?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleTabKey);
+    };
+  }, []);
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -278,16 +329,17 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
     >
       {/* Backdrop with blur */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" aria-hidden="true" />
       
       <motion.div
         className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 rounded-3xl ${
-          isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'
-        } backdrop-blur-xl border ${
-          isDarkMode ? 'border-gray-700' : 'border-gray-200'
-        } shadow-2xl mx-4`}
+          isDarkMode ? 'bg-gray-800/95 border-gray-600' : 'bg-white/95 border-gray-300'
+        } backdrop-blur-xl border shadow-2xl mx-4`}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -298,18 +350,20 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
         <motion.button
           onClick={onClose}
           className={`absolute top-4 right-4 p-2 sm:p-3 rounded-full ${
-            isDarkMode ? 'bg-gray-700/80 text-gray-300 hover:bg-gray-600' : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300'
-          } backdrop-blur-sm transition-colors duration-200 z-10`}
+            isDarkMode ? 'bg-gray-700/90 text-gray-200 hover:bg-gray-600' : 'bg-gray-200/90 text-gray-800 hover:bg-gray-300'
+          } backdrop-blur-sm transition-colors duration-200 z-10 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
+          aria-label="Close project details modal"
         >
           <X size={20} />
         </motion.button>
         
         <div className="pr-12 sm:pr-16">
           <motion.h3 
+            id="modal-title"
             className={`text-2xl sm:text-4xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r ${
-              isDarkMode ? 'from-blue-400 to-purple-400' : 'from-blue-600 to-purple-600'
+              isDarkMode ? 'from-blue-300 to-purple-300' : 'from-blue-700 to-purple-700'
             }`}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -319,7 +373,7 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
           </motion.h3>
           
           <motion.p 
-            className={`text-base sm:text-lg mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+            className={`text-base sm:text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
@@ -328,7 +382,7 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
           </motion.p>
           
           <motion.p 
-            className={`text-base sm:text-lg leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+            className={`text-base sm:text-lg leading-relaxed mb-8 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -342,21 +396,22 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <h4 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-              <Cpu className="inline mr-2" size={20} />
+            <h4 className={`text-base sm:text-lg font-semibold mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+              <Cpu className="inline mr-2" size={20} aria-hidden="true" />
               Tech Stack
             </h4>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3" role="list">
               {project.techStack.split(', ').map((tech, index) => (
                 <motion.span
                   key={index}
                   className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-medium ${
-                    isDarkMode ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' : 'bg-blue-100 text-blue-800 border border-blue-200'
+                    isDarkMode ? 'bg-blue-500/30 text-blue-200 border border-blue-500/50' : 'bg-blue-200 text-blue-900 border border-blue-300'
                   }`}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
+                  role="listitem"
                 >
                   {tech.trim()}
                 </motion.span>
@@ -378,11 +433,12 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
                   isDarkMode 
                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700' 
                     : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600'
-                } shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base`}
+                } shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                aria-label={`Launch ${project.name} project in new tab`}
               >
-                <Rocket className="mr-2" size={18} />
+                <Rocket className="mr-2" size={18} aria-hidden="true" />
                 Launch Project
-                <ArrowUpRight className="ml-2" size={18} />
+                <ArrowUpRight className="ml-2" size={18} aria-hidden="true" />
               </a>
             </motion.div>
           )}
@@ -390,10 +446,10 @@ const ProjectModal = ({ project, onClose, isDarkMode }) => {
       </motion.div>
     </motion.div>
   );
-};
+});
 
-// Enhanced Blog Modal Component
-const BlogModal = ({ onClose, isDarkMode }) => {
+// Enhanced Blog Modal Component with accessibility
+const BlogModal = React.memo(({ onClose, isDarkMode }) => {
   const blogProfiles = [
     {
       name: "Medium",
@@ -422,15 +478,16 @@ const BlogModal = ({ onClose, isDarkMode }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="blog-modal-title"
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" aria-hidden="true" />
       
       <motion.div
         className={`relative w-full max-w-lg p-6 sm:p-8 rounded-3xl ${
-          isDarkMode ? 'bg-gray-800/90' : 'bg-white/90'
-        } backdrop-blur-xl border ${
-          isDarkMode ? 'border-gray-700' : 'border-gray-200'
-        } shadow-2xl mx-4`}
+          isDarkMode ? 'bg-gray-800/95 border-gray-600' : 'bg-white/95 border-gray-300'
+        } backdrop-blur-xl border shadow-2xl mx-4`}
         initial={{ scale: 0.8, opacity: 0, y: 50 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -439,20 +496,24 @@ const BlogModal = ({ onClose, isDarkMode }) => {
         <button
           onClick={onClose}
           className={`absolute top-4 right-4 p-2 rounded-full ${
-            isDarkMode ? 'bg-gray-700/80 text-gray-300 hover:bg-gray-600' : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300'
-          } z-10`}
+            isDarkMode ? 'bg-gray-700/90 text-gray-200 hover:bg-gray-600' : 'bg-gray-200/90 text-gray-800 hover:bg-gray-300'
+          } z-10 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+          aria-label="Close blog platforms modal"
         >
           <X size={20} />
         </button>
         
-        <h3 className={`text-2xl sm:text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r ${
-          isDarkMode ? 'from-indigo-400 to-purple-400' : 'from-indigo-600 to-purple-600'
-        } pr-8`}>
-          <BookOpen className="inline mr-2" size={28} />
+        <h3 
+          id="blog-modal-title"
+          className={`text-2xl sm:text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r ${
+            isDarkMode ? 'from-indigo-300 to-purple-300' : 'from-indigo-700 to-purple-700'
+          } pr-8`}
+        >
+          <BookOpen className="inline mr-2" size={28} aria-hidden="true" />
           My Blog Platforms
         </h3>
         
-        <div className="space-y-4">
+        <div className="space-y-4" role="list">
           {blogProfiles.map((profile, index) => (
             <motion.a
               key={index}
@@ -460,28 +521,31 @@ const BlogModal = ({ onClose, isDarkMode }) => {
               target="_blank"
               rel="noopener noreferrer"
               className={`block p-4 sm:p-5 rounded-2xl transition-all duration-300 ${
-                isDarkMode ? 'bg-gray-700/50 hover:bg-gray-600/50' : 'bg-gray-100/50 hover:bg-gray-200/50'
-              } group border ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}
+                isDarkMode ? 'bg-gray-700/70 hover:bg-gray-600/70 border-gray-600' : 'bg-gray-100/70 hover:bg-gray-200/70 border-gray-300'
+              } group border focus:outline-none focus:ring-2 focus:ring-blue-500`}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ scale: 1.02, x: 5 }}
+              role="listitem"
+              aria-label={`Visit ${profile.name} - ${profile.description}`}
             >
               <div className="flex items-center">
-                <div className="text-2xl sm:text-3xl mr-3 sm:mr-4">{profile.icon}</div>
+                <div className="text-2xl sm:text-3xl mr-3 sm:mr-4" aria-hidden="true">{profile.icon}</div>
                 <div className="flex-1">
                   <h4 className={`text-base sm:text-lg font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                     {profile.name}
                   </h4>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {profile.description}
                   </p>
                 </div>
                 <ArrowUpRight 
                   size={18} 
                   className={`transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1 ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`} 
+                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                  aria-hidden="true"
                 />
               </div>
             </motion.a>
@@ -490,7 +554,7 @@ const BlogModal = ({ onClose, isDarkMode }) => {
       </motion.div>
     </motion.div>
   );
-};
+});
 
 // Main App Component
 const App = () => {
@@ -500,6 +564,7 @@ const App = () => {
   const [modalProject, setModalProject] = useState(null);
   const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showScrollIndicator, setShowScrollIndicator] = useState(true);
 
   const heroRef = useRef(null);
   const experienceRef = useRef(null);
@@ -519,64 +584,28 @@ const App = () => {
         setMousePosition({ x: e.clientX, y: e.clientY });
       };
       
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       return () => window.removeEventListener('mousemove', handleMouseMove);
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode((prevMode) => !prevMode);
-  };
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  // Enhanced Intersection Observer for proper navigation highlighting
+  // Hide scroll indicator on scroll
   useEffect(() => {
-    const sections = [
-      { ref: heroRef, id: 'hero' },
-      { ref: experienceRef, id: 'experience' },
-      { ref: projectsRef, id: 'projects' },
-      { ref: skillsRef, id: 'skills' },
-      { ref: blogsRef, id: 'blogs' },
-      { ref: contactRef, id: 'contact' }
-    ];
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '-10% 0px -70% 0px', // Adjusted for better detection
-      threshold: [0.1, 0.3, 0.5, 0.7]
+    const handleScroll = () => {
+      setShowScrollIndicator(window.scrollY < 100);
     };
     
-    const observerCallback = (entries) => {
-      // Sort entries by intersection ratio to get the most visible section
-      const visibleSections = entries
-        .filter(entry => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      
-      if (visibleSections.length > 0) {
-        const mostVisible = visibleSections[0];
-        setActiveSection(mostVisible.target.id);
-      }
-    };
-    
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-    
-    sections.forEach(({ ref }) => {
-      if (ref.current) {
-        observer.observe(ref.current);
-      }
-    });
-    
-    return () => {
-      sections.forEach(({ ref }) => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      });
-    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode((prevMode) => !prevMode);
+  }, []);
+
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen(!isMenuOpen);
+  }, [isMenuOpen]);
 
   // Enhanced scroll handler for better navigation detection
   useEffect(() => {
@@ -624,6 +653,21 @@ const App = () => {
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [modalProject, isBlogModalOpen]);
+
+  // Add skip to content link for accessibility
+  useEffect(() => {
+    const skipLink = document.createElement('a');
+    skipLink.href = '#main-content';
+    skipLink.textContent = 'Skip to main content';
+    skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
+    document.body.insertBefore(skipLink, document.body.firstChild);
+    
+    return () => {
+      if (skipLink.parentNode) {
+        skipLink.parentNode.removeChild(skipLink);
+      }
+    };
+  }, []);
 
   const resumeData = {
     name: "Lav Pranjale",
@@ -728,7 +772,7 @@ const App = () => {
     ],
   };
 
-  const scrollToSection = (id) => {
+  const scrollToSection = useCallback((id) => {
     const element = document.getElementById(id);
     const offset = 80;
     const elementPosition = element.offsetTop - offset;
@@ -738,7 +782,7 @@ const App = () => {
       behavior: 'smooth'
     });
     setIsMenuOpen(false);
-  };
+  }, []);
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -767,13 +811,36 @@ const App = () => {
       isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'
     } transition-colors duration-500`}>
       
-      {/* Custom Styles */}
+      {/* Custom Styles with better contrast */}
       <style>
         {`
           @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
           
           .font-inter {
             font-family: 'Inter', sans-serif;
+          }
+          
+          .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+          }
+          
+          .focus\\:not-sr-only:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            padding: inherit;
+            margin: inherit;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
           }
           
           ::-webkit-scrollbar {
@@ -847,18 +914,20 @@ const App = () => {
           top: mousePosition.y - 8,
           transform: `scale(${mousePosition.x > 0 ? 1 : 0})`
         }}
+        aria-hidden="true"
       />
 
-      {/* Enhanced Navigation */}
+      {/* Enhanced Navigation with better contrast */}
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-40 py-3 sm:py-4 transition-all duration-500 ${
           isDarkMode 
-            ? 'bg-gray-900/90 border-gray-700/50' 
-            : 'bg-white/90 border-gray-200/50'
+            ? 'bg-gray-900/95 border-gray-600/50' 
+            : 'bg-white/95 border-gray-400/50'
         } backdrop-blur-xl border-b h-16 sm:h-20`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
+        role="banner"
       >
         <div className="container mx-auto px-4 sm:px-6 flex justify-between items-center h-full">
           {/* Logo */}
@@ -870,13 +939,13 @@ const App = () => {
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
               &lt;Lav
             </span>
-            <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+            <span className={isDarkMode ? 'text-gray-100' : 'text-gray-900'}>
               .Dev/&gt;
             </span>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8" role="navigation" aria-label="Main navigation">
             {[
               { id: 'hero', icon: User, label: 'About' },
               { id: 'experience', icon: Briefcase, label: 'Experience' },
@@ -892,13 +961,14 @@ const App = () => {
                   activeSection === id
                     ? 'nav-link-active'
                     : isDarkMode 
-                      ? 'text-gray-300 hover:text-blue-400' 
-                      : 'text-gray-700 hover:text-blue-600'
-                } hover:bg-blue-500/10`}
+                      ? 'text-gray-200 hover:text-blue-300' 
+                      : 'text-gray-800 hover:text-blue-700'
+                } hover:bg-blue-500/10 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label={`Navigate to ${label} section`}
               >
-                <Icon size={14} />
+                <Icon size={14} aria-hidden="true" />
                 <span className="text-sm font-medium">{label}</span>
               </motion.button>
             ))}
@@ -907,17 +977,18 @@ const App = () => {
               onClick={toggleDarkMode}
               className={`p-2.5 xl:p-3 rounded-full transition-all duration-300 ${
                 isDarkMode 
-                  ? 'bg-gray-800/50 hover:bg-gray-700/50 text-yellow-400' 
-                  : 'bg-gray-200/50 hover:bg-gray-300/50 text-indigo-600'
+                  ? 'bg-gray-800/70 hover:bg-gray-700/70 text-yellow-300' 
+                  : 'bg-gray-300/70 hover:bg-gray-400/70 text-indigo-700'
               } backdrop-blur-sm border ${
-                isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'
-              }`}
+                isDarkMode ? 'border-gray-600/50' : 'border-gray-400/50'
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               whileHover={{ scale: 1.1, rotate: 180 }}
               whileTap={{ scale: 0.9 }}
+              aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
             >
               {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
             </motion.button>
-          </div>
+          </nav>
 
           {/* Mobile Menu Button */}
           <div className="flex items-center lg:hidden space-x-2">
@@ -929,13 +1000,14 @@ const App = () => {
               <motion.button
                 onClick={toggleDarkMode}
                 className={`absolute inset-0 p-2 rounded-full ${
-                  isDarkMode ? 'text-yellow-400' : 'text-indigo-600'
-                }`}
+                  isDarkMode ? 'text-yellow-300' : 'text-indigo-700'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 animate={{
                   opacity: 1,
                   rotate: isDarkMode ? 0 : 180,
                 }}
                 transition={{ duration: 0.3 }}
+                aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </motion.button>
@@ -943,7 +1015,9 @@ const App = () => {
             
             <button
               onClick={toggleMenu}
-              className="p-2 rounded-md"
+              className={`p-2 rounded-md ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              aria-label={`${isMenuOpen ? 'Close' : 'Open'} navigation menu`}
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -953,15 +1027,19 @@ const App = () => {
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMenuOpen && (
-            <motion.div
-              className={`lg:hidden px-4 sm:px-6 py-4 border-t ${
-                isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'
-              }`}
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+          <motion.div
+      className={`lg:hidden px-4 sm:px-6 py-4 border-t ${
+        isDarkMode
+          ? 'bg-gray-900 border-gray-700'
+          : 'bg-white border-gray-200'
+      } shadow-md`}
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3 }}
+      role="navigation"
+      aria-label="Mobile navigation"
+    >
               <div className="space-y-2">
                 {[
                   { id: 'hero', icon: User, label: 'About' },
@@ -978,11 +1056,12 @@ const App = () => {
                       activeSection === id
                         ? 'text-blue-400 bg-blue-500/10'
                         : isDarkMode 
-                          ? 'text-gray-300 hover:bg-gray-800/50' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                          ? 'text-gray-200 hover:bg-gray-800/50' 
+                          : 'text-gray-800 hover:bg-gray-100'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    aria-label={`Navigate to ${label} section`}
                   >
-                    <Icon size={18} />
+                    <Icon size={18} aria-hidden="true" />
                     <span>{label}</span>
                   </button>
                 ))}
@@ -992,8 +1071,8 @@ const App = () => {
         </AnimatePresence>
       </motion.nav>
 
-      {/* Main Content with consistent spacing */}
-      <main className="relative z-10 pt-16 sm:pt-20">
+      {/* Main Content with skip to content target */}
+      <main className="relative z-10 pt-16 sm:pt-20" id="main-content">
         {/* Hero Section */}
         <motion.section
           id="hero"
@@ -1028,7 +1107,7 @@ const App = () => {
                 transition={{ delay: 1.5, duration: 0.8 }}
               >
                 <div className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-light mb-4 sm:mb-6 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}>
                   <TypewriterText 
                     text="Full Stack JavaScript Developer" 
@@ -1039,18 +1118,19 @@ const App = () => {
                 </div>
                 
                 <div className={`flex flex-wrap justify-center gap-2 sm:gap-4 text-sm sm:text-base lg:text-lg ${
-                  isDarkMode ? 'text-gray-500' : 'text-gray-600'
-                }`}>
+                  isDarkMode ? 'text-gray-400' : 'text-gray-700'
+                }`} role="list" aria-label="Technical skills">
                   {['React Native', 'React.js', 'Node.js', 'MERN Stack'].map((tech, index) => (
                     <motion.span
                       key={tech}
                       className={`px-3 sm:px-4 py-1 sm:py-2 rounded-full border ${
-                        isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-white/50'
+                        isDarkMode ? 'border-gray-600 bg-gray-800/70' : 'border-gray-400 bg-white/80'
                       } backdrop-blur-sm`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 2.5 + index * 0.1 }}
                       whileHover={{ scale: 1.05, y: -2 }}
+                      role="listitem"
                     >
                       {tech}
                     </motion.span>
@@ -1060,7 +1140,7 @@ const App = () => {
 
               <motion.p
                 className={`text-base sm:text-lg md:text-xl max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  isDarkMode ? 'text-gray-200' : 'text-gray-800'
                 }`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1077,16 +1157,17 @@ const App = () => {
               >
                 <motion.a
                   href={`mailto:${resumeData.contact.email}`}
-                  className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl overflow-hidden"
+                  className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-2xl shadow-2xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500"
                   whileHover={{ 
                     scale: 1.05, 
                     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.4)" 
                   }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Send email to Lav Pranjale"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true" />
                   <div className="relative flex items-center justify-center space-x-2">
-                    <Mail size={18} />
+                    <Mail size={18} aria-hidden="true" />
                     <span>Get In Touch</span>
                   </div>
                 </motion.a>
@@ -1097,48 +1178,57 @@ const App = () => {
                   rel="noopener noreferrer"
                   className={`group px-6 sm:px-8 py-3 sm:py-4 font-semibold rounded-2xl transition-all duration-300 ${
                     isDarkMode 
-                      ? 'bg-gray-800/50 text-gray-100 border border-gray-700 hover:bg-gray-700/50' 
-                      : 'bg-white/50 text-gray-900 border border-gray-300 hover:bg-gray-100/50'
-                  } backdrop-blur-sm shadow-xl`}
+                      ? 'bg-gray-800/70 text-gray-100 border border-gray-600 hover:bg-gray-700/70' 
+                      : 'bg-white/80 text-gray-900 border border-gray-400 hover:bg-gray-100/80'
+                  } backdrop-blur-sm shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="View Lav Pranjale's GitHub profile"
                 >
                   <div className="flex items-center justify-center space-x-2">
-                    <Github size={18} />
+                    <Github size={18} aria-hidden="true" />
                     <span>View Work</span>
                   </div>
                 </motion.a>
               </motion.div>
             </motion.div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-              className="hidden sm:block absolute bottom-8 left-1/2 transform -translate-x-1/2"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 4, duration: 0.8 }}
-            >
-              <motion.div
-                className={`w-6 h-10 border-2 rounded-full ${
-                  isDarkMode ? 'border-gray-600' : 'border-gray-400'
-                } relative cursor-pointer`}
-                onClick={() => scrollToSection('experience')}
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
+            {/* Fixed and centered scroll indicator */}
+            <AnimatePresence>
+              {showScrollIndicator && (
                 <motion.div
-                  className={`absolute top-2 left-1/2 transform -translate-x-1/2 w-1 h-2 rounded-full ${
-                    isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
-                  }`}
-                  animate={{ y: [0, 16, 0], opacity: [1, 0, 1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              </motion.div>
-            </motion.div>
+                  className="hidden sm:block absolute bottom-12 left-1/2"
+                  style={{ transform: 'translateX(-50%)' }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <motion.button
+                    className={`w-6 h-10 border-2 rounded-full ${
+                      isDarkMode ? 'border-gray-500' : 'border-gray-600'
+                    } relative cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    onClick={() => scrollToSection('experience')}
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    aria-label="Scroll to next section"
+                  >
+                    <motion.div
+                      className={`absolute top-2 left-1/2 transform -translate-x-1/2 w-1 h-2 rounded-full ${
+                        isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
+                      }`}
+                      animate={{ y: [0, 16, 0], opacity: [1, 0, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      aria-hidden="true"
+                    />
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.section>
 
-        {/* Experience Section - Standard spacing */}
+        {/* Experience Section */}
         <motion.section
           id="experience"
           ref={experienceRef}
@@ -1165,48 +1255,48 @@ const App = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: window.innerWidth > 640 ? 96 : 64 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                aria-hidden="true"
               />
             </motion.div>
 
-            <div className="space-y-12">
+            <div className="space-y-12" role="list">
               {resumeData.experience.map((exp, index) => (
-                <motion.div
+                <motion.article
                   key={index}
                   className={`relative p-6 sm:p-8 md:p-12 rounded-3xl transition-all duration-500 group ${
                     isDarkMode 
-                      ? 'bg-gray-800/50 border border-gray-700/50 hover:border-blue-500/50' 
-                      : 'bg-white/50 border border-gray-200/50 hover:border-blue-400/50'
-                  } backdrop-blur-sm shadow-xl hover:shadow-2xl`}
+                      ? 'bg-gray-800/70 border border-gray-600/50 hover:border-blue-500/50' 
+                      : 'bg-white/80 border border-gray-400/50 hover:border-blue-400/50'
+                  } backdrop-blur-sm shadow-xl hover:shadow-2xl focus-within:ring-2 focus-within:ring-blue-500`}
                   variants={itemVariants}
                   whileHover={{ y: -5, scale: 1.01 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  role="listitem"
                 >
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" aria-hidden="true" />
                   
                   <div className="relative z-10">
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-6">
                       <div className="mb-4 sm:mb-0">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-400 mb-2 leading-tight">
+                        <h3 className={`text-xl sm:text-2xl md:text-3xl font-bold ${isDarkMode ? 'text-blue-300' : 'text-blue-700'} mb-2 leading-tight`}>
                           {exp.title}
                         </h3>
                         <p className={`text-base sm:text-lg font-medium ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                          isDarkMode ? 'text-gray-300' : 'text-gray-700'
                         }`}>
                           {exp.company}
                         </p>
                       </div>
                       <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                        isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-200/50 text-gray-700'
-                      } backdrop-blur-sm border ${
-                        isDarkMode ? 'border-gray-600/50' : 'border-gray-300/50'
-                      } flex-shrink-0`}>
+                        isDarkMode ? 'bg-gray-700/70 text-gray-200 border border-gray-600/50' : 'bg-gray-200/70 text-gray-800 border border-gray-400/50'
+                      } backdrop-blur-sm flex-shrink-0`}>
                         {exp.duration.split(' | ')[0]}
                       </span>
                     </div>
                     
-                    <div className="grid gap-4">
+                    <ul className="grid gap-4" role="list">
                       {exp.description.map((desc, i) => (
-                        <motion.div
+                        <motion.li
                           key={i}
                           className="flex items-start space-x-3"
                           initial={{ opacity: 0, x: -20 }}
@@ -1215,23 +1305,23 @@ const App = () => {
                         >
                           <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                             isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
-                          }`} />
+                          }`} aria-hidden="true" />
                           <p className={`text-sm sm:text-base md:text-lg leading-relaxed ${
-                            isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                            isDarkMode ? 'text-gray-200' : 'text-gray-800'
                           }`}>
                             {desc}
                           </p>
-                        </motion.div>
+                        </motion.li>
                       ))}
-                    </div>
+                    </ul>
                   </div>
-                </motion.div>
+                </motion.article>
               ))}
             </div>
           </div>
         </motion.section>
 
-        {/* Projects Section - Standard spacing */}
+        {/* Projects Section */}
         <motion.section
           id="projects"
           ref={projectsRef}
@@ -1259,10 +1349,11 @@ const App = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: window.innerWidth > 640 ? 96 : 64 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                aria-hidden="true"
               />
               <motion.p 
                 className={`text-base sm:text-lg mt-6 max-w-2xl mx-auto px-4 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}
                 variants={itemVariants}
               >
@@ -1270,7 +1361,7 @@ const App = () => {
               </motion.p>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" role="list">
               {resumeData.projects.map((project, index) => (
                 <ProjectCard
                   key={index}
@@ -1283,7 +1374,7 @@ const App = () => {
           </div>
         </motion.section>
 
-        {/* Skills Section - Standard spacing */}
+        {/* Skills Section */}
         <motion.section
           id="skills"
           ref={skillsRef}
@@ -1310,6 +1401,7 @@ const App = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: window.innerWidth > 640 ? 96 : 64 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                aria-hidden="true"
               />
             </motion.div>
 
@@ -1319,8 +1411,8 @@ const App = () => {
                   key={category}
                   className={`p-6 sm:p-8 rounded-3xl transition-all duration-500 ${
                     isDarkMode 
-                      ? 'bg-gray-800/50 border border-gray-700/50' 
-                      : 'bg-white/50 border border-gray-200/50'
+                      ? 'bg-gray-800/70 border border-gray-600/50' 
+                      : 'bg-white/80 border border-gray-400/50'
                   } backdrop-blur-sm shadow-xl`}
                   variants={itemVariants}
                   whileHover={{ scale: 1.01, y: -3 }}
@@ -1336,7 +1428,7 @@ const App = () => {
                     </span>
                   </motion.h3>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="list" aria-label={`${category} skills`}>
                     {skills.map((skill, skillIndex) => (
                       <SkillCard
                         key={skillIndex}
@@ -1352,7 +1444,7 @@ const App = () => {
           </div>
         </motion.section>
 
-        {/* Blogs Section - Fixed title cutting and standard spacing */}
+        {/* Blogs Section */}
         <motion.section
           id="blogs"
           ref={blogsRef}
@@ -1383,10 +1475,11 @@ const App = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: window.innerWidth > 640 ? 96 : 64 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                aria-hidden="true"
               />
               <motion.p 
                 className={`text-base sm:text-lg mt-6 max-w-2xl mx-auto px-4 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
                 }`}
                 variants={itemVariants}
               >
@@ -1394,45 +1487,55 @@ const App = () => {
               </motion.p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12" role="list">
               {resumeData.blogs.map((blog, index) => (
                 <motion.article
                   key={index}
                   className={`group p-8 rounded-3xl transition-all duration-500 ${
                     isDarkMode 
-                      ? 'bg-gray-800/50 border border-gray-700/50 hover:border-indigo-500/50' 
-                      : 'bg-white/50 border border-gray-200/50 hover:border-indigo-400/50'
-                  } backdrop-blur-sm shadow-xl hover:shadow-2xl cursor-pointer h-full flex flex-col`}
+                      ? 'bg-gray-800/70 border border-gray-600/50 hover:border-indigo-500/50' 
+                      : 'bg-white/80 border border-gray-400/50 hover:border-indigo-400/50'
+                  } backdrop-blur-sm shadow-xl hover:shadow-2xl cursor-pointer h-full flex flex-col focus-within:ring-2 focus-within:ring-blue-500`}
                   variants={itemVariants}
                   whileHover={{ y: -5, scale: 1.02 }}
                   onClick={() => window.open(blog.link, '_blank')}
+                  role="listitem"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      window.open(blog.link, '_blank');
+                    }
+                  }}
+                  aria-label={`Read ${blog.title} on ${blog.platform}`}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">{index === 0 ? '📝' : index === 1 ? '⚛️' : '🚀'}</div>
+                    <div className="text-3xl" aria-hidden="true">{index === 0 ? '📝' : index === 1 ? '⚛️' : '🚀'}</div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
-                      isDarkMode ? 'bg-indigo-500/20 text-indigo-300' : 'bg-indigo-100 text-indigo-800'
+                      isDarkMode ? 'bg-indigo-500/30 text-indigo-200 border border-indigo-500/50' : 'bg-indigo-200 text-indigo-900 border border-indigo-300'
                     }`}>
                       {blog.platform}
                     </span>
                   </div>
                   
-                  <h3 className="text-xl md:text-2xl font-bold text-indigo-400 mb-4 group-hover:text-indigo-300 transition-colors duration-200 leading-tight flex-shrink-0">
+                  <h3 className={`text-xl md:text-2xl font-bold ${isDarkMode ? 'text-indigo-300 group-hover:text-indigo-200' : 'text-indigo-700 group-hover:text-indigo-800'} mb-4 transition-colors duration-200 leading-tight flex-shrink-0`}>
                     {blog.title}
                   </h3>
                   
                   <p className={`text-base leading-relaxed mb-6 flex-1 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                    isDarkMode ? 'text-gray-200' : 'text-gray-800'
                   }`}>
                     {blog.description}
                   </p>
                   
                   <div className="flex items-center justify-between mt-auto">
-                    <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
                       Read Article
                     </span>
                     <ArrowUpRight 
                       size={18} 
-                      className="text-indigo-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" 
+                      className={`${isDarkMode ? 'text-indigo-300' : 'text-indigo-700'} group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200`}
+                      aria-hidden="true"
                     />
                   </div>
                 </motion.article>
@@ -1449,18 +1552,19 @@ const App = () => {
                   isDarkMode 
                     ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700' 
                     : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600'
-                } text-white shadow-lg hover:shadow-xl`}
+                } text-white shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
+                aria-label="Explore all blog platforms"
               >
-                <BookOpen className="mr-2" size={18} />
+                <BookOpen className="mr-2" size={18} aria-hidden="true" />
                 Explore All Platforms
               </motion.button>
             </motion.div>
           </div>
         </motion.section>
 
-        {/* Contact Section - Standard spacing */}
+        {/* Contact Section */}
         <motion.section
           id="contact"
           ref={contactRef}
@@ -1487,21 +1591,22 @@ const App = () => {
                 initial={{ width: 0 }}
                 whileInView={{ width: window.innerWidth > 640 ? 96 : 64 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                aria-hidden="true"
               />
             </motion.div>
 
             <motion.div
               className={`p-12 rounded-3xl text-center transition-all duration-500 ${
                 isDarkMode 
-                  ? 'bg-gray-800/50 border border-gray-700/50' 
-                  : 'bg-white/50 border border-gray-200/50'
+                  ? 'bg-gray-800/70 border border-gray-600/50' 
+                  : 'bg-white/80 border border-gray-400/50'
               } backdrop-blur-sm shadow-2xl`}
               variants={itemVariants}
               whileHover={{ scale: 1.01, y: -5 }}
             >
               <motion.p 
                 className={`text-xl md:text-2xl mb-12 leading-relaxed ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                  isDarkMode ? 'text-gray-200' : 'text-gray-800'
                 }`}
                 variants={itemVariants}
               >
@@ -1513,17 +1618,18 @@ const App = () => {
                   href={`mailto:${resumeData.contact.email}`}
                   className={`group flex items-center justify-center space-x-4 p-6 rounded-2xl transition-all duration-300 ${
                     isDarkMode 
-                      ? 'bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30' 
-                      : 'bg-blue-50 hover:bg-blue-100 border border-blue-200'
-                  }`}
+                      ? 'bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50' 
+                      : 'bg-blue-100 hover:bg-blue-200 border border-blue-300'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   whileHover={{ scale: 1.05, y: -3 }}
                   variants={itemVariants}
+                  aria-label={`Send email to ${resumeData.contact.email}`}
                 >
-                  <Mail size={24} className="text-blue-400 flex-shrink-0" />
+                  <Mail size={24} className={isDarkMode ? 'text-blue-300' : 'text-blue-700'} aria-hidden="true" />
                   <div className="text-left min-w-0">
-                    <div className="text-sm text-gray-500 mb-1">Email</div>
+                    <div className={`text-sm mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Email</div>
                     <div className={`font-semibold text-base truncate ${
-                      isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                      isDarkMode ? 'text-blue-300' : 'text-blue-700'
                     }`}>
                       {resumeData.contact.email}
                     </div>
@@ -1534,17 +1640,18 @@ const App = () => {
                   href={`tel:${resumeData.contact.phone}`}
                   className={`group flex items-center justify-center space-x-4 p-6 rounded-2xl transition-all duration-300 ${
                     isDarkMode 
-                      ? 'bg-green-500/10 hover:bg-green-500/20 border border-green-500/30' 
-                      : 'bg-green-50 hover:bg-green-100 border border-green-200'
-                  }`}
+                      ? 'bg-green-500/20 hover:bg-green-500/30 border border-green-500/50' 
+                      : 'bg-green-100 hover:bg-green-200 border border-green-300'
+                  } focus:outline-none focus:ring-2 focus:ring-green-500`}
                   whileHover={{ scale: 1.05, y: -3 }}
                   variants={itemVariants}
+                  aria-label={`Call ${resumeData.contact.phone}`}
                 >
-                  <div className="text-green-400 text-2xl flex-shrink-0">📱</div>
+                  <div className={`text-2xl flex-shrink-0 ${isDarkMode ? 'text-green-300' : 'text-green-700'}`} aria-hidden="true">📱</div>
                   <div className="text-left">
-                    <div className="text-sm text-gray-500 mb-1">Phone</div>
+                    <div className={`text-sm mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Phone</div>
                     <div className={`font-semibold text-base ${
-                      isDarkMode ? 'text-green-400' : 'text-green-600'
+                      isDarkMode ? 'text-green-300' : 'text-green-700'
                     }`}>
                       {resumeData.contact.phone}
                     </div>
@@ -1561,13 +1668,13 @@ const App = () => {
                     href: `https://${resumeData.contact.linkedin}`, 
                     icon: Linkedin, 
                     label: 'LinkedIn',
-                    color: 'text-blue-400'
+                    color: isDarkMode ? 'text-blue-300' : 'text-blue-700'
                   },
                   { 
                     href: `https://${resumeData.contact.github}`, 
                     icon: Github, 
                     label: 'GitHub',
-                    color: isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                    color: isDarkMode ? 'text-gray-200' : 'text-gray-800'
                   }
                 ].map(({ href, icon: Icon, label, color }) => (
                   <motion.a
@@ -1577,11 +1684,12 @@ const App = () => {
                     rel="noopener noreferrer"
                     className={`group p-4 rounded-2xl transition-all duration-300 ${
                       isDarkMode 
-                        ? 'bg-gray-700/50 hover:bg-gray-600/50' 
-                        : 'bg-gray-200/50 hover:bg-gray-300/50'
-                    }`}
+                        ? 'bg-gray-700/70 hover:bg-gray-600/70' 
+                        : 'bg-gray-300/70 hover:bg-gray-400/70'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     whileHover={{ scale: 1.1, rotate: 5, y: -5 }}
                     whileTap={{ scale: 0.9 }}
+                    aria-label={`Visit Lav Pranjale's ${label} profile`}
                   >
                     <Icon size={32} className={`${color} group-hover:scale-110 transition-transform duration-200`} />
                   </motion.a>
@@ -1594,15 +1702,16 @@ const App = () => {
         {/* Footer */}
         <motion.footer
           className={`text-center py-12 border-t ${
-            isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'
+            isDarkMode ? 'border-gray-600/50' : 'border-gray-400/50'
           } backdrop-blur-sm`}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
+          role="contentinfo"
         >
-          <p className={`text-lg ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-700'}`}>
             &copy; {new Date().getFullYear()} Lav Pranjale. Crafted with 
-            <span className="text-red-500 mx-2">❤️</span>
+            <span className="text-red-500 mx-2" aria-hidden="true">❤️</span>
             and lots of ☕
           </p>
         </motion.footer>
