@@ -1,128 +1,124 @@
-// This file centralizes all your portfolio data.
-
-const joiningYear = 2020;
-const currentYear = new Date().getFullYear();
-const experienceYears = currentYear - joiningYear;
-const experienceString = experienceYears > 1 ? `${experienceYears}+ Years` : `${experienceYears} Year`;
-
 export const portfolioData = {
   name: 'Lav Pranjale',
-  title: `Full-Stack JavaScript Engineer | MERN Stack | ${experienceString} Experience`,
-  summary: `An accomplished JavaScript Developer with ${experienceYears}+ years of hands-on experience in architecting and deploying scalable, high-performance web and mobile applications. Proficient in modern frontend frameworks like React and React Native, and adept with backend technologies including Node.js and the MERN stack (MongoDB, Express.js, React, Node.js). My expertise spans end-to-end development, from crafting clean, modular code and integrating complex RESTful APIs to optimizing application performance and ensuring robust security. I have a proven track record of successfully managing project execution, collaborating seamlessly with cross-functional teams, and maintaining exceptional client communication to consistently deliver high-quality, on-time solutions that directly address business objectives and user needs. I thrive in dynamic environments and am passionate about leveraging technology to solve real-world problems.`,
+  title: 'Senior Software Engineer – React, React Native & Node.js (AWS)',
+  summary: 'Senior Full-Stack Engineer with 6+ years building production-grade mobile and web systems across fintech, healthcare, e-learning, and SaaS. Specialized in React Native and Node.js on AWS, with a consistent record of shipping scalable products to 50,000+ users at 99.9% uptime. Led cross-functional teams of 4–6 engineers, improved user retention by 25%, and reduced backend latency by 40% through architectural decisions and performance optimization.',
   contact: {
     email: 'lav13feb@gmail.com',
     phone: '+919669662926',
     location: 'Indore, India',
     linkedin: 'https://www.linkedin.com/in/lav-pranjale-628559147',
-    github: 'https://github.com/lavpranjale'
+    github: 'https://github.com/lavpranjale',
+    portfolio: 'https://lavpranjale.github.io/portfolio/'
   },
   skills: {
-    frontend: ['React Native', 'React.js', 'HTML5', 'CSS3', 'TypeScript', 'Redux', 'Context API', 'Responsive Design', 'Webpack', 'Babel'],
-    backend: ['Node.js', 'Express.js', 'RESTful APIs', 'Authentication (JWT)', 'Microservices (Basic)'],
-    databases: ['MongoDB', 'MySQL', 'PostgreSQL (Basic)', 'Firebase Firestore'],
-    cloudDevOps: ['AWS (EC2, S3, CloudFront)', 'Firebase', 'Git', 'GitHub', 'CI/CD (Basic Understanding)'],
-    projectManagement: ['Agile Methodologies', 'Scrum', 'Sprint Planning', 'Task Delegation', 'Requirement Gathering', 'Client Communication', 'Cross-functional Team Collaboration'],
-    otherSkills: ['Performance Optimization', 'Clean Architecture', 'API Integration', 'Mobile-First Design', 'Problem Solving', 'Debugging', 'Code Review']
+    'Languages & Frontend': ['JavaScript (ES6+)', 'TypeScript', 'HTML5', 'CSS3'],
+    'Frameworks & Libraries': ['React', 'React Native', 'Next.js', 'Redux', 'Redux Toolkit'],
+    'Backend & APIs': ['Node.js', 'Express.js', 'RESTful APIs', 'JWT', 'OAuth', 'WebSocket', 'Server-Side Rendering'],
+    'Databases': ['MongoDB', 'Mongoose', 'MySQL', 'Query Optimization', 'Data Modeling'],
+    'Cloud & DevOps': ['AWS EC2', 'AWS ECS', 'AWS Lambda', 'AWS S3', 'CloudFront', 'Docker', 'Firebase', 'CI/CD (GitHub Actions)'],
+    'Architecture': ['Microservices', 'Serverless', 'Event-Driven Architecture', 'Distributed Systems', 'RBAC'],
+    'Tools & Methods': ['Agile', 'Scrum', 'Jira', 'Git', 'Trello', 'System Design', 'Performance Optimization']
   },
   experience: [
     {
-      title: 'Frontend Developer (Freelancer)',
-      company: 'Harbura',
-      dates: '03/2025 - 05/2025',
+      title: 'Founding Engineer (Contract)',
+      company: 'TrueAuraTech',
+      dates: '12/2025 – 03/2026',
       location: 'Remote',
       description: [
-        'Architected and built intuitive user interfaces using React with TypeScript, delivering a health-focused application with enhanced user experience.',
-        'Seamlessly integrated complex RESTful APIs, developed in Python with AWS services, ensuring secure and efficient data flow for health documents.',
-        'Implemented robust functionalities allowing users to securely upload, manage, and view sensitive health documents, significantly improving data accessibility and control.',
-        'Leveraged advanced GPT technologies to develop intelligent, personalized user experiences, including a chatbot for real-time health record queries, boosting user engagement.',
-        'Managed end-to-end project execution, ensuring on-time delivery and adherence to high-quality standards within an agile remote development environment.'
+        'Sole engineer in an early-stage startup; owned full-stack architecture and collaborated directly with founders on roadmap and feature prioritization.',
+        'Designed a multi-tenant SaaS backend (Node.js, MongoDB, AWS) with RBAC, JWT/OAuth authentication, and event-driven real-time workflows using WebSocket.',
+        'Built an admin dashboard in React, accelerating internal operations review cycles by eliminating manual reporting.',
+        'Established modular codebase conventions and CI/CD pipelines (GitHub Actions) to enable smooth onboarding as the team scales.',
+        'Optimized API response times through query indexing and middleware caching, reducing average latency by ~35% under concurrent load.'
       ],
-      techStack: ['React', 'TypeScript', 'REST APIs', 'AWS', 'Python', 'GPT APIs']
+      techStack: ['Node.js', 'MongoDB', 'AWS', 'React', 'WebSocket', 'JWT', 'OAuth', 'GitHub Actions', 'RBAC']
     },
     {
-      title: 'MERN | React Native Developer',
+      title: 'Senior Software Engineer',
       company: 'Webcubator Technologies',
-      dates: '01/2020 - 03/2025',
+      dates: '01/2020 – 03/2025',
       location: 'Pune, India',
       description: [
-        'Engineered and maintained highly scalable web and mobile applications using the MERN stack and React Native, successfully supporting over 10,000 active users with a consistent 99.9% uptime.',
-        'Collaborated extensively with clients to meticulously gather and refine requirements, translating business needs into tailored technical solutions that boosted client satisfaction by 20% and achieved a 100% on-time project delivery rate.',
-        'Spearheaded the development of critical features from conception to deployment, encompassing UI/UX design, robust API integration, and optimized database architecture.',
-        'Managed multiple production releases with stringent quality control, achieving zero critical issues post-deployment and significantly reducing application downtime by 30% through proactive monitoring and optimization.',
-        'Led and mentored junior developers, fostering a collaborative environment and ensuring adherence to best practices in coding, testing, and deployment.'
+        'Architected microservices and serverless infrastructure on AWS (ECS, Lambda, S3, CloudFront), powering 50,000+ active users at 99.9% uptime across 6 production products.',
+        'Designed and implemented CI/CD pipelines with Docker and GitHub Actions, cutting deployment failures by 30% and shortening release cycles from bi-weekly to weekly.',
+        'Led and mentored a team of 4–6 engineers through structured code reviews, architecture documentation, and sprint planning, lifting on-time delivery by 20%.',
+        'Shipped React Native and React applications across healthcare, fintech, e-learning, and restaurant verticals — all meeting or exceeding SLA targets post-launch.',
+        'Reduced backend query response times by 40% across multiple products through index tuning, query refactoring, and connection-pool optimisation in MongoDB and MySQL.'
       ],
-      techStack: ['MERN Stack', 'React Native', 'Node.js', 'Express.js', 'MongoDB', 'React.js', 'Firebase', 'AWS (EC2, S3, CloudFront)', 'Agile Methodologies']
+      techStack: ['React Native', 'React', 'Node.js', 'AWS ECS', 'Lambda', 'S3', 'CloudFront', 'Docker', 'MongoDB', 'MySQL', 'GitHub Actions']
     }
   ],
   projects: [
     {
-      name: 'Harbura Health Application',
-      role: 'Frontend Developer (Freelancer)',
-      description: 'Developed a secure, high-performance web application using React (TypeScript) for seamless health document management. Features include Smart Sorting, Effortless Uploads, and Auto-Sync with provider portals, enhancing user control over personal medical records.',
-      techStack: ['React', 'TypeScript', 'AWS', 'GPT APIs', 'Python', 'REST API'],
-      details: 'This project focused on creating a robust and intuitive health application from the ground up. I was responsible for building responsive user interfaces, integrating with Python-based RESTful APIs hosted on AWS, and implementing secure document handling. A key achievement was integrating a GPT-powered chatbot, enabling real-time health record queries and significantly improving user engagement and personalization. The application was designed with a strong emphasis on data security and user experience.'
+      name: 'Workforce & Attendance SaaS',
+      company: 'TrueAuraTech',
+      description: 'Built a multi-tenant workforce management platform with real-time attendance tracking via WebSockets, role-based access control, and horizontal scalability on AWS ECS. Designed Node.js + MongoDB backend with event-driven task queues handling concurrent write bursts without data inconsistency.',
+      techStack: 'Node.js, MongoDB, AWS ECS, WebSocket, RBAC, React, GitHub Actions',
+      highlights: ['Real-time WebSocket attendance tracking', 'Multi-tenant RBAC architecture', 'Event-driven task queues', 'Horizontal scalability on AWS ECS']
+    },
+    {
+      name: 'Harbura Health – Medical Records',
+      company: 'Webcubator Technologies',
+      description: 'Delivered a HIPAA-aligned medical records platform (React, Node.js, AWS) managing 5,000+ AES-encrypted files with 40% faster retrieval via CloudFront CDN caching. Integrated GPT-powered chatbot for record summarisation, cutting manual data entry by 60% and reducing support tickets by 50%.',
+      techStack: 'React, TypeScript, Node.js, AWS, CloudFront, GPT APIs, AES Encryption',
+      highlights: ['5,000+ AES-encrypted files', '40% faster retrieval via CDN', 'GPT chatbot reduced data entry by 60%', 'HIPAA-aligned architecture']
     },
     {
       name: 'CGMPlus & Clova Health',
-      role: 'React Native Developer at Webcubator Technologies',
-      description: 'Built AI-driven mobile applications for weight loss and glucose control, integrating with real-time CGM devices and serving over 1,000 users. Implemented precise meal and exercise logging with 95% calorie tracking accuracy and designed intuitive graphs to improve glucose monitoring efficiency by 40%.',
-      techStack: ['React Native', 'Firebase', 'AWS (S3)', 'Terra', 'Vital', 'SQL', 'Mobile App Development', 'Data Visualization', 'Health Tech'],
-      details: 'These critical health applications aimed to provide users with comprehensive tools for managing their health. My role involved developing the core mobile functionalities, integrating with real-time continuous glucose monitoring (CGM) devices, and implementing advanced data visualization for glucose trends. I also developed a doctor dashboard allowing real-time monitoring of over 100 users, enhancing patient care. The focus was on improving user retention by 30% through enhanced UX and promoting long-term health goal adherence.'
+      company: 'Webcubator Technologies',
+      link: 'play.google.com/store/apps/details?id=com.iwelhealth.cgmpal',
+      description: 'Developed React Native apps with CGM device integration, achieving 95% calorie-tracking accuracy through BLE data parsing and calibration logic. Built a React + Node.js physician dashboard enabling real-time patient monitoring for 100+ patients, improving clinical trend analysis efficiency by 40%.',
+      techStack: 'React Native, Node.js, Firebase, AWS S3, Terra, Vital, SQL, BLE',
+      highlights: ['95% calorie-tracking accuracy via BLE', 'Real-time monitoring for 100+ patients', '40% improvement in clinical trend analysis', '30% user retention uplift']
     },
     {
       name: 'Rocco Finance',
-      role: 'React Native Developer at Webcubator Technologies',
-      description: 'Engineered a React Native mobile application providing personalized spending insights and enabling wage advances. Successfully helped over 50,000 users access earnings before payday, reducing debt reliance by 40% and increasing retention by 25%.',
-      techStack: ['React Native', 'Node.js', 'AWS (S3)', 'SQL', 'Firebase', 'Plaid', 'Payliance', 'Zendesk', 'Fintech', 'Financial Wellness'],
-      details: 'Rocco Finance was a pivotal project in the fintech domain, designed to empower users with greater financial flexibility. I developed key features such as personalized spending analytics, interest-free wage advances, and integration with third-party financial APIs like Plaid and Payliance. The application significantly reduced overdraft and payday loan usage, demonstrably improving users\' financial well-being and lowering debt-related stress by 30%.'
+      company: 'Webcubator Technologies',
+      description: 'Shipped a React Native + Node.js fintech app to 50,000+ users; AI-powered cash-flow analytics on AWS drove a 40% reduction in user debt and 25% retention uplift. Designed the wage-advance disbursement API with idempotency and rollback support to ensure zero double-disbursements in high-traffic periods.',
+      techStack: 'React Native, Node.js, AWS S3, SQL, Firebase, Plaid, Payliance',
+      highlights: ['50,000+ active users', '40% reduction in user debt', '25% retention uplift', 'Zero double-disbursements via idempotent API']
     },
     {
-      name: 'EnLaCancha',
-      role: 'Full Stack JavaScript Developer at Webcubator Technologies',
-      description: 'Developed a scalable learning platform for the Latino community, facilitating access to courses for over 50,000 active users. Integrated Stripe for secure payment processing, which boosted course enrollments by 20%, and optimized data retrieval speeds by 40% using MongoDB.',
-      techStack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Stripe', 'AWS (S3)', 'EdTech', 'Scalable Architecture'],
-      details: 'EnLaCancha was a comprehensive educational platform requiring robust full-stack development. I was responsible for both frontend (React JS) and backend (Node.js, Express.js) development, ensuring a fast and responsive UI. Key contributions included integrating secure payment gateways with Stripe, managing real-time data storage with MongoDB, and deploying a highly available infrastructure on AWS S3, ensuring 99.9% uptime for content delivery.'
+      name: 'EnLaCancha – E-Learning Platform',
+      company: 'Webcubator Technologies',
+      link: 'enlacancha.us/',
+      description: 'Scaled e-learning platform (React, Node.js, MongoDB) to 50,000+ learners at 99.9% uptime; Stripe integration increased course enrollments by 20%. Reduced content-delivery latency by 40% using AWS S3 + CloudFront CDN with edge caching strategies tailored to video-heavy course material.',
+      techStack: 'React.js, Node.js, Express.js, MongoDB, Stripe, AWS S3, CloudFront',
+      highlights: ['50,000+ active learners', '99.9% uptime', '20% enrollment increase via Stripe', '40% latency reduction with CDN']
     },
     {
-      name: 'Planitnerd',
-      role: 'Full Stack Developer at Webcubator Technologies',
-      description: 'Built a cross-platform trip planning and travel hacking education app (iOS/Android) using Ionic Framework and Angular 9, achieving over 1,000 downloads. Enabled real-time collaboration, improving group planning efficiency by 50%, and hosted on AWS for 99.9% uptime.',
-      techStack: ['Ionic Framework (5)', 'Angular 9', 'Node.js', 'Express.js', 'MongoDB', 'AWS (ECS, S3, CloudFront, Elastic IP)', 'Cross-Platform Development', 'Travel Tech'],
-      details: 'Planitnerd was an innovative travel application aimed at simplifying trip planning and educating users on travel hacking. My role involved full-stack development, from building the cross-platform mobile application using Ionic and Angular to designing and implementing the backend with Node.js and Express.js. I integrated real-time collaboration features that significantly enhanced group planning. The application was hosted on a highly scalable AWS infrastructure, ensuring fast delivery speeds and exceptional uptime.'
-    },
-    {
-      name: 'Palatable Restaurant',
-      role: 'React Native Developer at Webcubator Technologies',
-      description: 'Developed a cross-platform mobile application for restaurant owners (iOS/Android), currently used by over 10,000 active users to manage orders, deals, menus, and profiles. This led to a 40% reduction in order processing time and a 25% reduction in menu change errors.',
-      techStack: ['React Native', 'Firebase', 'AWS (EC2, S3, CloudFront)', 'Real-time Sync', 'Mobile App Development', 'Restaurant Management'],
-      details: 'Palatable Restaurant was designed to be a comprehensive tool for restaurant owners to streamline their operations. I was responsible for building the mobile application that provided efficient order management tools, real-time menu updates, and customer engagement features. Integration with Firebase enabled real-time data synchronization, ensuring accurate order tracking and improving overall operational efficiency for restaurant owners. The app significantly improved management workflows and customer satisfaction.'
+      name: 'Palatable Restaurant Platform',
+      company: 'Webcubator Technologies',
+      description: 'Delivered a Firebase + React + Node.js live order management system for 10,000+ active users, improving kitchen workflow efficiency by 40%. Deployed on AWS with auto-scaling groups to handle weekend peak traffic without service degradation.',
+      techStack: 'React, React Native, Firebase, Node.js, AWS EC2, S3, CloudFront',
+      highlights: ['10,000+ active users', '40% kitchen workflow improvement', 'Auto-scaling for peak traffic', 'Real-time order sync via Firebase']
     }
   ],
   blogs: [
     {
       title: 'React Native Performance Optimization: What Actually Made a Difference',
       platform: 'Medium',
-      url: 'https://medium.com/@lav13feb/react-native-performance-optimization-what-actually-made-a-difference-af548af37a08',
-      description: `Optimizing performance isn’t about using 100 different tools. It’s about small, intentional improvements that compound over time. In this post, I’ll skip the theory and share real techniques that made a visible difference in performance across React Native apps I’ve built or maintained.`,
+      link: 'https://medium.com/@lav13feb/react-native-performance-optimization-what-actually-made-a-difference-af548af37a08',
+      description: 'Practical techniques that made a visible difference in performance across real-world React Native apps — skipping the theory, straight to what works.'
     },
     {
       title: 'Lessons from Scaling a React Native App to 1M+ Users',
       platform: 'Hashnode',
-      url: 'https://scaling-mobile-react-native-insights.hashnode.dev/lessons-from-scaling-a-react-native-app-to-1m-users',
-      description: `When you’re building for a few hundred users, development feels straightforward: add a feature, test it, release it, repeat. But when your app crosses 1 million users, that simplicity disappears — fast. Suddenly, every decision has scale implications, and tiny cracks in your architecture become glaring system faults.`,
+      link: 'https://scaling-mobile-react-native-insights.hashnode.dev/lessons-from-scaling-a-react-native-app-to-1m-users',
+      description: 'Hard-earned lessons from scaling a React Native app beyond 1 million users — where architecture decisions become system-critical.'
     },
     {
-      title: 'Build a Native Module in React Native (Battery Level Example for Android & iOS)',
-      platform: 'dev.to',
-      url: 'https://dev.to/lav_pranjale_4cdd421d464d/build-a-native-module-in-react-native-battery-level-example-for-android-ios-46i4',
-      description: `In this guide, you’ll learn how to create your own native module in React Native — using Kotlin for Android and Swift for iOS — to fetch the battery level of the device.
-You'll understand how the React Native bridge works and how JavaScript can talk directly to platform-native code.`,
+      title: 'Build a Native Module in React Native (Battery Level Example)',
+      platform: 'Dev.to',
+      link: 'https://dev.to/lav_pranjale_4cdd421d464d/build-a-native-module-in-react-native-battery-level-example-for-android-ios-46i4',
+      description: 'Step-by-step guide to building a native module using Kotlin (Android) and Swift (iOS) — and how JS talks directly to platform-native code.'
     }
   ],
   education: [
     {
       degree: 'MCA',
-      institution: 'International Institute of Professional Studies, DAVV',
+      institution: 'International Institute of Professional Studies (DAVV)',
       year: '2019',
       location: 'Indore, India'
     }
